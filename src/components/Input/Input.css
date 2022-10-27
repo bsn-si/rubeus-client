@@ -1,0 +1,104 @@
+.input {
+  transition: background 0.3s ease;
+  border-radius: 5px;
+  
+  background-color: #fff;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+
+  height: 46px;
+  width: 100%;
+}
+
+.input:not(.edit) .meta {
+  padding-left: 10px;
+}
+
+.input.icon:not(.edit) {
+  padding-left: 0;
+}
+
+.input .icon {
+  justify-content: center;
+  align-items: center;  
+  display: flex;
+
+  min-width: 40px;
+  width: 44px;
+}
+
+.input .icon svg {
+  width: 18px;
+}
+
+/* Meta */
+.input .meta {
+  transition: all 0.3s ease;
+  width: calc(100% - 44px);
+  flex-direction: column;
+  padding-right: 24px;
+  padding-left: 0px;
+  cursor: pointer;
+  display: flex;
+}
+
+.input .meta .label {
+  font-weight: 400;
+  font-size: 10px;
+  color: #000;
+  opacity: 0.65;
+}
+
+.input .meta .value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-weight: 500;
+  font-size: 12px;
+  margin-top: 4px;
+  color: #000;
+}
+
+.input .error {
+  position: absolute;
+  font-weight: 400;
+  font-size: 10px;
+  color: #F44336;
+  bottom: 4px;
+  left: 50px;
+}
+
+/* Input */
+.input input {
+  background-color: transparent;
+  transition: all 0.4s ease;
+  font-weight: 500;
+  overflow: hidden;
+  padding: 0 10px;
+  font-size: 12px;
+  min-width: auto;
+  outline: none;
+  border: none;
+  height: 46px;
+  flex: 1;
+}
+
+.input input::placeholder {
+  color: rgba(0,0,0, 0.65);
+}
+
+.input input:focus {
+  background-color: rgba(0,0,0, 0.02);
+}
+
+.input.invalid input,
+.input.invalid input:focus,
+.input.invalid input::placeholder {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #F44336;
+}
+
+.input.invalid .icon {
+  fill: #F44336;
+}

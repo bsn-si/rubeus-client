@@ -1,0 +1,67 @@
+.update-form {
+  flex-direction: column;
+  padding: 14px 16px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.update-form.loading .overlay {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: 100;
+
+  background-color: rgba(0,0,0, 0.2);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  left: 0;
+  top: 0;
+}
+
+.update-form.loading .fields, .update-form.loading .button {
+  filter: blur(8px);
+}
+
+.update-form .fields {
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+}
+
+.update-form .input {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 14px;
+}
+
+.update-form .actions {
+  justify-content: flex-end;
+  display: flex;
+}
+
+.update-form .button.save {
+  background-color: #EEEEEE;
+  color: #000;
+  height: 40px;
+  width: 100%;
+}
+
+.update-form .button.save:hover {
+  background-color: #E0E0E0;
+}
+
+.update-form .button.disabled {
+  background-color: #EEEEEE;
+  color: #000;
+  height: 40px;
+  width: 100%;
+  cursor: auto;
+
+  opacity: 0.4;
+}
+
+.update-form .button.disabled:hover {
+  background-color: #E0E0E0;
+}

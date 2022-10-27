@@ -1,0 +1,21 @@
+.balance {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  height: 60px;
+  width: 100%;
+
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+
+  padding: 0 14px;
+  font-size: 12px;
+}
+
+.balance .title {
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 500;
+}
+
+.balance .amount {
+  margin-top: 4px;
+}

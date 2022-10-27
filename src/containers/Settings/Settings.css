@@ -1,0 +1,89 @@
+.settings {
+  flex-direction: column;
+  display: flex;
+  width: 280px;
+}
+
+.settings.save {
+  padding: 14px 16px 25px 16px;
+  flex-direction: column;
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.settings.save .actions {
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.settings > .title {
+  color: rgba(0, 0, 0, 0.75);
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.settings .actions {
+  flex-direction: column;
+  display: flex;
+}
+
+.settings .inputs {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  margin: 14px 0;
+}
+
+.settings .toggle-save {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  align-items: center;
+  padding: 0 14px;
+  display: flex;
+  height: 40px;
+}
+
+.settings .toggle-save .checkbox span {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.settings .toggle-save .checkbox span::before {
+  margin-right: 12px;
+}
+
+.settings .inputs .private-key {
+  border-radius: 0;
+}
+
+.settings .inputs .contract {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 6px 6px 0 0;
+}
+
+.settings .inputs .rpc-url {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0 0 6px 6px;
+}
+
+.settings .button.connect {
+  z-index: 100;
+  height: 40px;
+  width: 100%;
+}
+
+.settings .button.reset {
+  border-radius: 1px solid rgba(0,0,0, 0.05);
+  background-color: transparent;
+  margin-bottom: 10px;
+  color: #000;
+  height: 40px;
+  width: 100%;
+}
+
+.settings .button.reset:hover {
+  background-color: rgba(0,0,0, 0.1);
+}

@@ -1,0 +1,68 @@
+.create-form {
+  flex-direction: column;
+  padding: 14px 16px;
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.create-form.loading .overlay {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: 100;
+
+  background-color: rgba(0,0,0, 0.2);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  left: 0;
+  top: 0;
+}
+
+.create-form.loading .fields, .create-form.loading .button {
+  filter: blur(8px);
+}
+
+.create-form .fields {
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+}
+
+.create-form .input {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 14px;
+}
+
+.create-form .actions {
+  justify-content: flex-end;
+  display: flex;
+}
+
+.create-form .button.create {
+  background-color: #EEEEEE;
+  color: #000;
+  height: 40px;
+  width: 100%;
+}
+
+.create-form .button.create:hover {
+  background-color: #E0E0E0;
+}
+
+.create-form .button.disabled {
+  background-color: #EEEEEE;
+  color: #000;
+  height: 40px;
+  width: 100%;
+  cursor: auto;
+
+  opacity: 0.4;
+}
+
+.create-form .button.disabled:hover {
+  background-color: #E0E0E0;
+}

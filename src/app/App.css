@@ -1,0 +1,71 @@
+.app > .container {
+  border: 1px solid rgba(0,0,0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+
+  max-width: 800px;
+  width: 800px;
+  
+  max-height: 500px;
+  height: 500px;
+  
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.app.extension > .container {
+  border-radius: 0;
+  border: none;
+}
+
+.button {
+  position: relative;
+  user-select: none;
+
+  background-color: #03A9F4;
+  transition: all 0.3s ease;
+  color: #fff;
+
+  text-transform: uppercase;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 12px;
+  cursor: pointer;
+
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.button:hover {
+  background-color: #1E88E5;
+}
+
+.error.message {
+  background-color: #F44336;
+  border-radius: 0 0 6px 6px;
+  padding: 18px 8px 14px 8px;
+  text-align: center;
+  font-size: 14px;
+  color: #FFF;
+  z-index: 1;
+
+  margin-top: -8px;
+}
+
+.ReactModal__Overlay {
+  background-color: rgba(255,255,255, 0.4) !important;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+/* .ReactModal__Overlay .ReactModal__Content {
+  z-index: 100;
+
+  height: 320px;
+  width: 380px;
+} */
