@@ -85,6 +85,8 @@ export const getCredentials = createAsyncThunk(
 
       dispatch(setCollection(action))
     } catch (error) {
+      console.error(error)
+      
       if (connected) {
         dispatch(setCredentialsError("Failed load credentials"))
       }

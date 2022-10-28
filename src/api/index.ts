@@ -77,8 +77,8 @@ export class API {
 
     const list = await contract.query
       .getCredentials(signer.address, { gasLimit: -1 })
-      .then(response => response.output.toJSON() as any)
-      .then(({ ok: data }) =>
+      .then(response => response.output.toJSON())
+      .then((data: any[]) =>
         data.map(credential => {
           credential._encrypted = credential.payload
           credential.payload = decryptPayloadFromHex(
