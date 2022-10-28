@@ -10,13 +10,9 @@ import { Item } from "../Item"
 import "./List.css"
 
 export function List() {
-  const selectedGroup = useSelector(selectors.selectedGroup)
+  const collection = useSelector(selectors.credentials)
   const error = useSelector(selectors.credentialsError)
   const dispatch = useDispatch<AppDispatch>()
-
-  const collection = useSelector((state: RootState) =>
-    selectors.credentials(state, selectedGroup),
-  )
 
   const onReload = useCallback(() => {
     dispatch(actions.getCredentials())

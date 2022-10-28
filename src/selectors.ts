@@ -27,10 +27,13 @@ export const isSelectedGroup = createSelector(
 export const credentials = createSelector(
   [
     (state: RootState) => state.credentials.collection,
-    (state: RootState, group?: string) =>
-      group ? state.credentials.groups[group] : state.credentials.ids,
+    (state: RootState) => state.credentials.selectedGroup,
+    (state: RootState) => state.credentials.groups,
+    (state: RootState) => state.credentials.ids,
   ],
-  (collection, ids) => {
+  (collection, group, groups, allIds) => {
+    const ids = group ? groups[group] : allIds
+
     if (!ids) {
       return []
     }

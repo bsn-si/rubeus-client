@@ -84,9 +84,7 @@ export const getCredentials = createAsyncThunk(
       )
 
       dispatch(setCollection(action))
-    } catch (error) {
-      console.error(error)
-      
+    } catch (error) {      
       if (connected) {
         dispatch(setCredentialsError("Failed load credentials"))
       }
@@ -144,7 +142,7 @@ export const updateCredential = createAsyncThunk(
 
 export const addCredential = createAsyncThunk(
   "credentials/addCredential",
-  async (credential: Pick<Credential, "group" | "payload">, { dispatch, getState }) => {
+  async (params: Pick<Credential, "group" | "payload">, { dispatch, getState }) => {
     const state = getState() as RootState
     const privateKey = selectors.privateKey(state)
     const contract = selectors.contract(state)
@@ -157,7 +155,7 @@ export const addCredential = createAsyncThunk(
     )
 
     try {
-      await api.addCredential(privateKey, contract, credential.group, credential.payload)
+      const credential = await api.addCredential(privateKey, contract, params.group, params.payload)
       await delay(300)
 
       dispatch(setCredential(credential))
@@ -245,7 +243,13 @@ export const credentialsSlice = createSlice({
     },
     unsetCredential(state, { payload }: PayloadAction<Credential>) {
       // prettier-ignore
-      state.groups[payload.group] = state.groups[payload.group].filter(id => id !== payload.id)
+      state.groups[payload.group] = state.groups[payload.group]
+        .filter(id => id !== payload.id)
+      
+      if (!state.groups[payload.group].length) {
+        delete state.groups[payload.group]
+      }
+
       state.ids = state.ids.filter(id => id !== payload.id)
       delete state.collection[payload.id]
     },
