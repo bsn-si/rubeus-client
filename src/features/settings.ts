@@ -44,6 +44,22 @@ const initialState: SettingsState = {
   }
 }
 
+// @FIX: unfocus extension
+{
+  try {
+    const temp = JSON.parse(localStorage.temp || "{}")
+    Object.assign(initialState, temp)
+  } finally {
+    // @PASS
+  }
+}
+
+const extendTmp = (obj: any) => {
+  const temp = JSON.parse(localStorage.temp || "{}")
+  Object.assign(temp, obj)
+  localStorage.setItem("temp", JSON.stringify(temp))
+}
+
 export const watchBalance = (store: Store<RootState>) => {
   const requestBalance = async () => {
     const state = store.getState()
@@ -117,6 +133,8 @@ export const connect = createAsyncThunk(
     }
 
     if (rpcUrl && contract && privateKey) {
+      localStorage.removeItem("temp")
+
       try {
         await api.connect(rpcUrl)
 
@@ -143,15 +161,18 @@ export const settingsSlice = createSlice({
   initialState,
   reducers: {
     setContract(state, action: PayloadAction<string | void | undefined>) {
+      extendTmp({ contract: action.payload || undefined })
       state.contract = action.payload || undefined
     },
     setRpcUrl(state, action: PayloadAction<string | void | undefined>) {
+      extendTmp({ rpcUrl: action.payload || undefined })
       state.rpcUrl = action.payload || undefined
     },
     setBalance(state, action: PayloadAction<BN | void | undefined>) {
       state.balance = action.payload || undefined
     },
     setPrivateKey(state, action: PayloadAction<string | void | undefined>) {
+      extendTmp({ privateKey: action.payload || undefined })
       state.privateKey = action.payload || undefined
     },
     setConnected(state, action: PayloadAction<boolean | void | undefined>) {
