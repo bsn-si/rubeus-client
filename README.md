@@ -1,31 +1,31 @@
 ## Disclaimer
-> 💀 This is a **Work in Progress**.  
-> Current status: Common PoC data storage and methods available. Partially tested.   
+> 💀 **Work in Progress**.  
+> Current status: Common PoC, data storage methods available. Partially tested.   
 > **Use at your own risk**.
 
 <h1 align="center">
-    🎟️ ✨ Rubeus Activation Client 🎁 👛
+    🎟️ ✨ Rubeus dApp 🎁 👛
 </h1>
 
-Rubeus coupon activation DApp.
+Rubeus browser extension.
 
 ## Features
 DApp can interact with custom RPC and contracts and use polkadot.js extensions to sign transactions.
 This is hybrid dapp with build as SPA app and chrome extension. 
 
 - Adding new credentials
-- Update credentials
-- Delete credentials
+- Updating credentials
+- Deleting credentials
 - List of credentials by groups 
 - May work with anonymous session and with save session data
 
 ## Usage
-For use this plugin you need active rubeus contract, and setup you signer key and contract address in dapp, also you can enter RPC url to target node. 
+To use this plugin you need to active Rubeus contract and setup you signer key and contract address in the dApp, also you can enter RPC URL to target node. 
 
-Current version of dapp:
+Current version of the dApp:
 [Run DApp](https://bsn-si.github.io/rubeus/)
 
-For use this dapp as extension - please load unpacked build in chrome by `chrome://extensions`.
+To use this dapp as extension, please load unpacked build in chrome by `chrome://extensions`.
 
 ## Build & Run
 ```
