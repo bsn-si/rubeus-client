@@ -22,6 +22,9 @@ This is hybrid dapp with build as SPA app and chrome extension.
 ## Usage
 To use this plugin you need to active Rubeus contract and setup you signer key and contract address in the dApp, also you can enter RPC URL to target node. 
 
+A short video explaining how to use the test page:
+[![how_to_interact](https://user-images.githubusercontent.com/98888366/199804806-8da45800-27f0-4719-9452-e36990c62772.png)](https://media.bsn.si/rubeus/interact_with_test_page.mp4)
+
 Current version of the dApp:
 [Run DApp](https://bsn-si.github.io/rubeus/)
 
