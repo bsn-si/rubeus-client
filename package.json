@@ -7,7 +7,6 @@
     "lint:fix": "eslint '*/**/*.{ts,tsx}' --quiet --fix",
     "fix:all": "npm run style:fix && npm run lint:fix",
     "start": "webpack serve --hot",
-    
     "build:extension": "NODE_ENV=production EXTENSION=true webpack build",
     "build": "NODE_ENV=production webpack build"
   },
@@ -18,8 +17,10 @@
     "@polkadot/util": "^10.1.10",
     "@polkadot/util-crypto": "^10.1.10",
     "@reduxjs/toolkit": "^1.8.6",
+    "@types/crypto-js": "^4.1.1",
     "bn.js": "^5.2.0",
     "clsx": "^1.1.1",
+    "crypto-js": "^4.1.1",
     "js-chacha20": "^1.1.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

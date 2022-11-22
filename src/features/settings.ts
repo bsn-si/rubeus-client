@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, Store } from "@reduxjs/toolkit"
 import { PayloadAction } from "@reduxjs/toolkit"
+import { AES, enc } from "crypto-js"
 import BN from "bn.js"
 
 import { getCredentials, setInitialCredentials } from "./credentials"
@@ -11,9 +12,9 @@ import { api } from "../api"
 const { assign } = Object
 
 export interface SettingsState {
-  skipWelcomeScreen?: boolean
-
+  encryptedPrivateKey?: string
   privateKey?: string
+
   contract?: string
   rpcUrl?: string
 
@@ -28,16 +29,21 @@ const initialState: SettingsState = {
   rpcUrl: RPC_URL,
 
   connected: false,
-  loading: false
+  loading: false,
 }
 
 {
   try {
-    const saved = JSON.parse(localStorage.data || "{}")
-    Object.assign(initialState, saved)
-  
-    if (saved.privateKey && saved.contract && saved.rpcUrl) {
-      initialState.skipWelcomeScreen = true
+    const { encryptedPrivateKey, contract, rpcUrl } = JSON.parse(
+      localStorage.data || "{}",
+    )
+
+    if (encryptedPrivateKey && contract && rpcUrl) {
+      assign(initialState, {
+        encryptedPrivateKey,
+        contract,
+        rpcUrl,
+      })
     }
   } finally {
     // @PASS
@@ -55,9 +61,9 @@ const initialState: SettingsState = {
 }
 
 const extendTmp = (obj: any) => {
-  const temp = JSON.parse(localStorage.temp || "{}")
-  Object.assign(temp, obj)
-  localStorage.setItem("temp", JSON.stringify(temp))
+  const tmp = JSON.parse(localStorage.temp || "{}")
+  assign(tmp, obj)
+  localStorage.setItem("temp", JSON.stringify(tmp))
 }
 
 export const watchBalance = (store: Store<RootState>) => {
@@ -68,7 +74,7 @@ export const watchBalance = (store: Store<RootState>) => {
 
     if (isConnected && privateKey && api.client) {
       const signer = keyring.addFromUri(privateKey)
-      const response = await api.client.query.system.account(signer.address) as any
+      const response = (await api.client.query.system.account(signer.address)) as any
       const balance = response.data.free.toString()
       store.dispatch(setBalance(balance))
     } else {
@@ -85,7 +91,7 @@ export const setSetingsError = createAsyncThunk(
     if (error) {
       setTimeout(() => dispatch(setSetingsError()), 2000)
     }
-    
+
     return error
   },
 )
@@ -93,43 +99,50 @@ export const setSetingsError = createAsyncThunk(
 export const initialSetup = createAsyncThunk(
   "settings/initialSetup",
   async (_: void, { getState, dispatch }) => {
-    const state = getState() as RootState
-
-    const { skipWelcomeScreen } = state.settings
-
-    if (skipWelcomeScreen) {
-      dispatch(connect(true))
-    }
+    // const state = getState() as RootState
+    // dispatch(connect({}))
   },
 )
 
-export const reset = createAsyncThunk(
-  "settings/reset",
-  async (_: void, { dispatch }) => {
-    localStorage.removeItem("data")
-    
-    dispatch(setInitialCredentials())
-    dispatch(setInitialSettings())
-  },
-)
+export const reset = createAsyncThunk("settings/reset", async (_: void, { dispatch }) => {
+  localStorage.removeItem("data")
+
+  dispatch(setInitialCredentials())
+  dispatch(setInitialSettings())
+})
 
 export const connect = createAsyncThunk(
   "settings/connect",
-  async (save: boolean, { dispatch, getState }) => {
+  async (options: { password?: string }, { dispatch, getState }) => {
     const state = getState() as RootState
 
-    const { rpcUrl, contract, privateKey, connected } = state.settings
+    const { rpcUrl, contract, encryptedPrivateKey } = state.settings
+    let { privateKey } = state.settings
+
     dispatch(setInitialCredentials())
 
-    if (save || connected) {
+    if (options.password && privateKey && !encryptedPrivateKey) {
+      const encryptedPrivateKey = AES.encrypt(privateKey, options.password).toString()
+
       localStorage.setItem(
         "data",
         JSON.stringify({
-          privateKey,
+          encryptedPrivateKey,
           contract,
           rpcUrl,
         }),
       )
+    }
+
+    if (options.password && encryptedPrivateKey && !privateKey) {
+      try {
+        privateKey = AES.decrypt(encryptedPrivateKey, options.password).toString(enc.Utf8)
+        dispatch(setPrivateKey(privateKey))
+      } catch (error) {
+        dispatch(setSetingsError("Invalid password"))
+        console.error(error)
+        return
+      }
     }
 
     if (rpcUrl && contract && privateKey) {
@@ -143,7 +156,6 @@ export const connect = createAsyncThunk(
           dispatch(setConnected(true))
         } catch (error) {
           await api.disconnect()
-          dispatch(setSkipWelcome(false))
           dispatch(setSetingsError("Connect to contract failed"))
         }
       } catch (error) {
@@ -178,9 +190,6 @@ export const settingsSlice = createSlice({
     setConnected(state, action: PayloadAction<boolean | void | undefined>) {
       state.connected = !!action.payload
     },
-    setSkipWelcome(state, action: PayloadAction<boolean | void | undefined>) {
-      state.skipWelcomeScreen = !!action.payload
-    },
     setInitialSettings(state) {
       assign(state, {
         skipWelcomeScreen: false,
@@ -206,7 +215,6 @@ export const settingsSlice = createSlice({
 
 export const {
   setInitialSettings,
-  setSkipWelcome,
   setPrivateKey,
   setConnected,
   setContract,

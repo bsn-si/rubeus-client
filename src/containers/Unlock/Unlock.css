@@ -1,0 +1,34 @@
+.unlock {
+  flex-direction: column;
+  display: flex;
+  width: 280px;
+}
+
+.unlock.save .actions {
+  justify-content: flex-end;
+  flex: 1;
+}
+
+.unlock > .title {
+  color: rgba(0, 0, 0, 0.75);
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.unlock .actions {
+  flex-direction: column;
+  display: flex;
+}
+
+.unlock .inputs {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  margin: 14px 0;
+}
+
+.unlock .button.connect {
+  z-index: 100;
+  height: 40px;
+  width: 100%;
+}

@@ -14,6 +14,7 @@ interface Props {
   icon?: JSX.Element
   value?: string
   name?: string
+  type?: string
 }
 
 export function Input(props: Props) {
@@ -28,19 +29,22 @@ export function Input(props: Props) {
     setValue(value)
   }, [])
 
-  const onApply = useCallback(async (_value?: string) => {
-    const handleValue = _value ? _value : value
-    const hasError = props.onValidate?.(handleValue)
+  const onApply = useCallback(
+    async (_value?: string) => {
+      const handleValue = _value ? _value : value
+      const hasError = props.onValidate?.(handleValue)
 
-    if (hasError) {
-      setError(hasError)
-      setValue(props.value)
-    } else {
-      setError(undefined)
-      setEditable(false)
-      props.onChange(handleValue)
-    }
-  }, [value, props.value])
+      if (hasError) {
+        setError(hasError)
+        setValue(props.value)
+      } else {
+        setError(undefined)
+        setEditable(false)
+        props.onChange(handleValue)
+      }
+    },
+    [value, props.value],
+  )
 
   const onKeyDown = useCallback(
     async (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -58,7 +62,7 @@ export function Input(props: Props) {
     inputRef?.current?.focus()
   }, [])
 
-  // @NOTE: outside click link error fix 
+  // @NOTE: outside click link error fix
   const onClickOutside = useCallback(async () => {
     const value = inputRef.current.value
     onApply(value)
@@ -71,6 +75,7 @@ export function Input(props: Props) {
   useOutside(inputRef, onClickOutside)
 
   const subclasses = { invalid: !!error, edit: editable, icon: !!props.icon }
+  const isPassword = props.type === "password"
 
   return (
     <div className={clsx("input", props.className, subclasses)}>
@@ -82,6 +87,7 @@ export function Input(props: Props) {
 
           <input
             placeholder={props.placeholder}
+            type={props.type || "text"}
             onChange={onChangeValue}
             onKeyDown={onKeyDown}
             name={props.name}
@@ -92,7 +98,13 @@ export function Input(props: Props) {
       ) : (
         <div className="meta" onClick={onClickEdit}>
           <div className="label">{props.name}</div>
-          <div className="value">{value || props.placeholder}</div>
+          <div className={clsx("value", { password: isPassword })}>
+            {value
+              ? isPassword
+                ? <span>{new Array(value.length).join("⬤")}</span>
+                : value
+              : props.placeholder}
+          </div>
         </div>
       )}
     </div>

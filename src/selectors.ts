@@ -3,11 +3,11 @@ import { RootState } from "./store"
 
 const { keys } = Object
 
-export const skipWelcomeScreen = (state: RootState) => state.settings.skipWelcomeScreen
+export const encryptedPrivateKey = (state: RootState) => state.settings.encryptedPrivateKey
 export const privateKey = (state: RootState) => state.settings.privateKey
 export const contract = (state: RootState) => state.settings.contract
-export const rpcUrl = (state: RootState) => state.settings.rpcUrl
 export const balance = (state: RootState) => state.settings.balance
+export const rpcUrl = (state: RootState) => state.settings.rpcUrl
 
 export const isConnected = (state: RootState) => state.settings.connected
 export const settingsLoading = (state: RootState) => state.settings.loading

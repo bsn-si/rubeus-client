@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useState } from "react"
+import { ChangeEvent, useCallback, useMemo, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { isAddress } from "@polkadot/util-crypto"
 import { isHex } from "@polkadot/util"
@@ -11,11 +11,14 @@ import * as actions from "../../features"
 import { keyring } from "../../utils"
 import "./Settings.css"
 
+const { assign } = Object
+
 interface Props {
   action: "save" | "connect"
 }
 
 export function Settings({ action = "connect" }: Props) {
+  const [password, setPassword] = useState("")
   const [save, setSave] = useState(false)
 
   const privateKey = useSelector(selectors.privateKey)
@@ -24,9 +27,24 @@ export function Settings({ action = "connect" }: Props) {
   const rpcUrl = useSelector(selectors.rpcUrl)
   const dispatch = useDispatch<AppDispatch>()
 
+  const isCanConnect = useMemo(() => {
+    const hasCommon = privateKey && contract && rpcUrl
+    const validPassword = !save ? true : !!password
+    return hasCommon && validPassword
+  }, [privateKey, contract, rpcUrl, password, save])
+
   const onConnect = useCallback(async () => {
-    await dispatch(actions.connect(save)).unwrap()
-  }, [privateKey, contract, save])
+    await dispatch(
+      actions.connect(
+        assign(
+          {},
+          save && {
+            password,
+          },
+        ),
+      ),
+    ).unwrap()
+  }, [privateKey, contract, save, password])
 
   const onReset = useCallback(async () => {
     await dispatch(actions.reset()).unwrap()
@@ -62,11 +80,21 @@ export function Settings({ action = "connect" }: Props) {
     dispatch(actions.setRpcUrl(address))
   }, [])
 
+  const onChangePassword = useCallback((password: string) => {
+    setPassword(password)
+  }, [])
+
   const onValidateUrl = useCallback((url: string) => {
     try {
       return new URL(url).protocol !== "ws:" ? "Accepts only ws:// addresses" : undefined
     } catch (error) {
       return "Invalid URL"
+    }
+  }, [])
+
+  const onValidatePassword = useCallback((password: string) => {
+    if (!password || password.length < 3) {
+      return "password min-length is 3"
     }
   }, [])
 
@@ -122,6 +150,19 @@ export function Settings({ action = "connect" }: Props) {
             name="save"
             id="save"
           />
+
+          {save && (
+            <Input
+              placeholder="Please enter password for encrypt"
+              onValidate={onValidatePassword}
+              onChange={onChangePassword}
+              className="password"
+              type="password"
+              name="Password"
+              value={password}
+              icon={<Icons.Key />}
+            />
+          )}
         </div>
       )}
 
@@ -132,7 +173,10 @@ export function Settings({ action = "connect" }: Props) {
           </div>
         )}
 
-        <div className="button connect" onClick={onConnect}>
+        <div
+          className={clsx("button connect", { disabled: !isCanConnect })}
+          onClick={onConnect}
+        >
           {action === "connect" ? "Connect" : "Save"}
         </div>
 
