@@ -74,6 +74,10 @@ module.exports = () => {
         fs: false,
       },
     },
+
+    optimization: {
+      minimize: false,
+    },
   
     devServer: {
       port: 8080,
