@@ -6,6 +6,7 @@ import { hexToU8a, u8aToHex } from "@polkadot/util"
 import { GenericAccountId } from "@polkadot/types"
 import * as JSChaCha20 from "js-chacha20"
 import Keyring from "@polkadot/keyring"
+import * as pako from "pako"
 import BN from "bn.js"
 
 // Target contract address - if doesn't need configure in ui
@@ -27,7 +28,8 @@ export function encryptToHex(address: GenericAccountId, key: string, data: strin
   const nonce = address.toU8a().slice(0, 12)
 
   const encrypted = new JSChaCha20(hexToU8a(key), nonce).encrypt(message)
-  const hex = u8aToHex(encrypted, undefined, false)
+  const compressed = pako.deflate(encrypted)
+  const hex = u8aToHex(compressed, undefined, false)
 
   return hex
 }
@@ -43,7 +45,8 @@ export function encryptPayloadToHex(
 export function decryptFromHex(address: GenericAccountId, key: string, payload: string) {
   const nonce = address.toU8a().slice(0, 12)
   const bytes = hexToU8a(payload)
-  const decrypted = new JSChaCha20(hexToU8a(key), nonce).decrypt(bytes)
+  const decompressed = pako.inflate(bytes)
+  const decrypted = new JSChaCha20(hexToU8a(key), nonce).decrypt(decompressed)
 
   return new TextDecoder().decode(decrypted)
 }
