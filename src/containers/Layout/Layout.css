@@ -1,0 +1,158 @@
+.frame {
+  flex-direction: column;
+  position: relative;
+  display: flex;
+
+  height: 100%;
+  width: 100%;
+}
+
+.frame .row {
+  flex-direction: row;
+  max-height: 100%;
+  display: flex;
+  flex: 1;
+}
+
+.frame .row.loading, .frame.blured {
+  filter: blur(8px);
+}
+
+
+.frame .row .active-zone {
+  width: calc(100% - 200px);
+  overflow: hidden;
+}
+
+.frame.loading .credential {
+  filter: blur(5px);
+}
+
+.frame.loading .overlay {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: 100;
+  
+  background-color: rgba(0,0,0, 0.2);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+/* 
+* ACTIVE CONTENT ZONE
+*/
+
+.active-zone {
+  background-color: #fff;
+  flex-direction: column;
+  display: flex;
+}
+
+.active-zone > .header {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0 14px;
+  height: 50px;
+}
+
+.active-zone > .header .actions {
+  display: flex;
+}
+
+.active-zone > .header .button.create {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: transparent;
+  padding: 6px 12px;
+  color: #000;
+}
+
+.active-zone > .header .button.create:first-child {
+  margin-right: 10px;
+}
+
+.active-zone > .header .button.create:hover {
+  background-color: rgba(0,0,0, 0.1);
+}
+
+.active-zone > .content {
+  flex-direction: column;
+  position: relative;
+  display: flex;
+
+  height: calc(100% - 50px);
+  overflow-y: auto;  
+}
+
+/* 
+* TABS
+*/
+
+.active-zone > .header > .tabs {
+  display: flex;
+}
+
+.active-zone > .header > .tabs .tab {
+  border-bottom: 3px solid rgba(0, 0, 0, 0.0);
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.active-zone > .header > .tabs .tab.active {
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+.active-zone > .header > .tabs .tab .label {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.active-zone > .header > .tabs .tab.active .label {
+  color: rgba(0, 0, 0, 1);
+}
+
+/* 
+* SIDEBAR
+*/
+
+.frame .row .sidebar {
+  min-width: 200px;
+  width: 200px;
+}
+
+.frame .sidebar {
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #EEEEEE;
+  flex-direction: column;  
+  overflow: hidden;
+  display: flex;
+}
+
+.frame .sidebar .content {
+  height: calc(100% - 110px);
+  flex-direction: column;
+  overflow-y: auto;
+  display: flex;
+}
+
+.frame .sidebar > .title {
+  color: rgba(0, 0, 0, 0.75);
+  text-align: center;
+  font-weight: 400;
+  font-size: 16px;
+
+  align-items: center;
+  display: flex;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0 14px;
+  height: 50px;
+}
+

@@ -2,10 +2,10 @@ import { useCallback, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { clsx } from "clsx"
 
-import { AppDispatch, RootState } from "../../../store"
-import { Input, Spinner } from "../../../components"
-import * as selectors from "../../../selectors"
-import * as actions from "../../../features"
+import { AppDispatch, RootState } from "../../../../store"
+import { Input, Spinner } from "../../../../components"
+import * as selectors from "../../../../selectors"
+import * as actions from "../../../../features"
 import "./Create.css"
 
 export function Create() {
@@ -33,11 +33,11 @@ export function Create() {
       }),
     ).unwrap()
 
-    dispatch(actions.setModalOpened(false))
+    dispatch(actions.setCredentialsModalOpened(false))
   }, [login, password, host, group])
 
   return (
-    <div className={clsx("create-form", { loading })}>
+    <div className={clsx("credential create-form", { loading })}>
       {loading && (
         <div className="overlay">
           <Spinner />

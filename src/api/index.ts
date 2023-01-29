@@ -4,7 +4,7 @@ import { ApiBase } from "@polkadot/api/base"
 import BN from "bn.js"
 
 import metadata from "./contract.metadata.json"
-import { Credential } from "../models"
+import { Credential, Note } from "../models"
 
 import {
   execContractCallWithResult,
@@ -100,7 +100,7 @@ export class API {
     id: string,
     group: string,
     payload: any,
-  ) {
+  ): Promise<Credential> {
     const contract = new ContractPromise(this.client as any, metadata, contractAddress)
     const signer = keyring.addFromUri(privateKey)
 
@@ -129,7 +129,7 @@ export class API {
     contractAddress: string,
     group: string,
     payload: any,
-  ) {
+  ): Promise<Credential> {
     const contract = new ContractPromise(this.client as any, metadata, contractAddress)
     const signer = keyring.addFromUri(privateKey)
 
@@ -160,6 +160,93 @@ export class API {
     const signer = keyring.addFromUri(privateKey)
 
     await execContractCallWithResult(contract, signer, "deleteCredential", id)
+
+    return id
+  }
+
+  async getNotes(
+    privateKey: string,
+    contractAddress: string,
+  ): Promise<Note[]> {
+    const contract = new ContractPromise(this.client as any, metadata, contractAddress)
+    const signer = keyring.addFromUri(privateKey)
+
+    const list = await contract.query
+      .getNotes(signer.address, { gasLimit: -1 })
+      .then(response => response.output.toJSON())
+      .then((data: any[]) =>
+        data.map(note => {
+          note._encrypted = note.payload
+          note.payload = decryptPayloadFromHex(
+            contract.address,
+            privateKey,
+            note.payload,
+          )
+
+          return note
+        }),
+      )
+
+    return list
+  }
+
+  async updateNote(
+    privateKey: string,
+    contractAddress: string,
+    id: string,
+    payload: any,
+  ): Promise<Note> {
+    const contract = new ContractPromise(this.client as any, metadata, contractAddress)
+    const signer = keyring.addFromUri(privateKey)
+
+    const _payload = encryptPayloadToHex(contract.address, privateKey, payload)
+
+    await execContractCallWithResult(
+      contract,
+      signer,
+      "updateNote",
+      id,
+      _payload,
+    )
+
+    return {
+      _encrypted: _payload,
+      payload,
+      id,
+    }
+  }
+
+  async addNote(
+    privateKey: string,
+    contractAddress: string,
+    payload: any,
+  ): Promise<Note> {
+    const contract = new ContractPromise(this.client as any, metadata, contractAddress)
+    const signer = keyring.addFromUri(privateKey)
+
+    const _payload = encryptPayloadToHex(contract.address, privateKey, payload)
+    const id = generateUUID()
+
+    await execContractCallWithResult(
+      contract,
+      signer,
+      "addNote",
+      _payload,
+      id,
+    )
+
+    return {
+      _encrypted: _payload,
+      payload,
+      id,
+    }
+  }
+
+  async deleteNote(privateKey: string, contractAddress: string, id: string) {
+    const contract = new ContractPromise(this.client as any, metadata, contractAddress)
+    const signer = keyring.addFromUri(privateKey)
+
+    await execContractCallWithResult(contract, signer, "deleteNote", id)
 
     return id
   }

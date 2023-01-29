@@ -1,0 +1,71 @@
+.note.details {
+  flex-direction: column;
+  display: flex;
+}
+
+.note.details.empty {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100%;
+}
+
+.note.details > .header {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0 14px;
+  height: 50px;
+}
+
+.note.details .actions {
+  display: flex;
+}
+
+.note.details .text {
+  padding: 14px;
+}
+
+.note.details > .title {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.note.details .actions .action {
+  border: 1px solid rgba(0,0,0,0.1);
+  background-color: transparent;
+  border-radius: 50%;
+  color: #000;
+  height: 30px;
+  width: 30px;
+}
+
+.note.details .actions .action:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.note.details .actions .action svg {
+  height: 15px;
+  width: 15px;
+}
+
+.note.details .actions .action:first-child {
+  margin-right: 8px;
+}
+
+.note.details .button.reload {
+  background-color: #EEEEEE;
+  color: #000;
+
+  margin-top: 14px;
+  font-size: 12px;
+  height: 36px;
+  width: 120px;
+}
+
+.note.details .button.reload:hover {
+  background-color: #E0E0E0;
+}

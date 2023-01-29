@@ -1,26 +1,48 @@
-.groups.list {
+.notes.list {
   flex-direction: column;  
+  overflow-y: auto;
   display: flex;
 }
 
-.groups.list .item {
+.notes.list.empty {
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.notes.list.empty > .title {
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.notes.list .item {
   transition: all 0.3s ease;
   align-items: center;
   position: relative;
+
+  align-items: center;
   display: flex;
 
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   background-color: rgba(255, 255, 255, 0);
   padding: 0 14px;
   cursor: pointer;
+  height: 50px;
+  width: 100%;
+}
 
+.notes.list .item span {
   color: rgba(0, 0, 0, 0.75);
   font-weight: 500;
   font-size: 12px;
-  height: 50px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.groups.list .item::before {
+.notes.list .item::before {
   transition: all 0.3s ease;
   background-color: #607D8B;
   position: absolute;
@@ -31,6 +53,6 @@
   top: 0;
 }
 
-.groups.list .item:hover::before, .groups.list .item.selected::before {
+.notes.list .item:hover::before, .notes.list .item.selected::before {
   left: 0px;
 }

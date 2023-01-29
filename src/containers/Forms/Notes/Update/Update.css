@@ -1,0 +1,67 @@
+.update-form.note {
+  flex-direction: column;
+  padding: 14px 16px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.update-form.note.loading .overlay {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  z-index: 100;
+
+  background-color: rgba(0,0,0, 0.2);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  left: 0;
+  top: 0;
+}
+
+.update-form.note.loading .fields, .update-form.note.loading .button {
+  filter: blur(8px);
+}
+
+.update-form.note .fields {
+  flex-direction: column;
+  display: flex;
+  flex: 1;
+}
+
+.update-form.note .input {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 14px;
+}
+
+.update-form.note .actions {
+  justify-content: flex-end;
+  display: flex;
+}
+
+.update-form.note .button.save {
+  background-color: #EEEEEE;
+  color: #000;
+  height: 40px;
+  width: 100%;
+}
+
+.update-form.note .button.save:hover {
+  background-color: #E0E0E0;
+}
+
+.update-form.note .button.disabled {
+  background-color: #EEEEEE;
+  color: #000;
+  height: 40px;
+  width: 100%;
+  cursor: auto;
+
+  opacity: 0.4;
+}
+
+.update-form.note .button.disabled:hover {
+  background-color: #E0E0E0;
+}

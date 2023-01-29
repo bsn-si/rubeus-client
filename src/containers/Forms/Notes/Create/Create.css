@@ -1,12 +1,13 @@
-.update-form {
+.create-form.note {
   flex-direction: column;
   padding: 14px 16px;
+  position: relative;
   display: flex;
   height: 100%;
   width: 100%;
 }
 
-.update-form.loading .overlay {
+.create-form.note.loading .overlay {
   justify-content: center;
   align-items: center;
   display: flex;
@@ -21,38 +22,38 @@
   top: 0;
 }
 
-.update-form.loading .fields, .update-form.loading .button {
+.create-form.note.loading .fields, .create-form.note.loading .button {
   filter: blur(8px);
 }
 
-.update-form .fields {
+.create-form.note .fields {
   flex-direction: column;
   display: flex;
   flex: 1;
 }
 
-.update-form .input {
+.create-form.note .input {
   border: 1px solid rgba(0, 0, 0, 0.05);
   margin-bottom: 14px;
 }
 
-.update-form .actions {
+.create-form.note .actions {
   justify-content: flex-end;
   display: flex;
 }
 
-.update-form .button.save {
+.create-form.note .button.create {
   background-color: #EEEEEE;
   color: #000;
   height: 40px;
   width: 100%;
 }
 
-.update-form .button.save:hover {
+.create-form.note .button.create:hover {
   background-color: #E0E0E0;
 }
 
-.update-form .button.disabled {
+.create-form.note .button.disabled {
   background-color: #EEEEEE;
   color: #000;
   height: 40px;
@@ -62,6 +63,6 @@
   opacity: 0.4;
 }
 
-.update-form .button.disabled:hover {
+.create-form.note .button.disabled:hover {
   background-color: #E0E0E0;
 }

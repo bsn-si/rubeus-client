@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import React, { cloneElement, createElement, useCallback, useEffect, useRef, useState } from "react"
 import { clsx } from "clsx"
 
 import { useOutside } from "../../hooks"
@@ -10,6 +10,7 @@ interface Props {
   onValidate?: (value: string) => string | undefined
   onChange?: (value: string) => void
   placeholder?: string
+  textarea?: boolean
   className?: string
   icon?: JSX.Element
   value?: string
@@ -19,7 +20,7 @@ interface Props {
 
 export function Input(props: Props) {
   const [value, setValue] = useState(props.value)
-  const [editable, setEditable] = useState(false)
+  const [editable, setCredentialEditable] = useState(false)
   const [error, setError] = useState<string>()
   const inputRef = useRef<HTMLInputElement>()
 
@@ -39,7 +40,7 @@ export function Input(props: Props) {
         setValue(props.value)
       } else {
         setError(undefined)
-        setEditable(false)
+        setCredentialEditable(false)
         props.onChange(handleValue)
       }
     },
@@ -56,7 +57,7 @@ export function Input(props: Props) {
   )
 
   const onClickEdit = useCallback(async () => {
-    setEditable(true)
+    setCredentialEditable(true)
     await delay(50)
 
     inputRef?.current?.focus()
@@ -74,8 +75,24 @@ export function Input(props: Props) {
 
   useOutside(inputRef, onClickOutside)
 
-  const subclasses = { invalid: !!error, edit: editable, icon: !!props.icon }
+  const subclasses = {
+    invalid: !!error,
+    edit: editable,
+    icon: !!props.icon,
+    area: !!props.textarea,
+  }
+  
   const isPassword = props.type === "password"
+
+  const input = createElement(props.textarea ? "textarea" : "input", {
+    placeholder: props.placeholder,
+    type: props.type || "text",
+    onChange: onChangeValue,
+    onKeyDown: onKeyDown,
+    name: props.name,
+    ref: inputRef,
+    value: value,
+  })
 
   return (
     <div className={clsx("input", props.className, subclasses)}>
@@ -84,26 +101,21 @@ export function Input(props: Props) {
       {editable ? (
         <>
           {error && <div className="error">{error}</div>}
-
-          <input
-            placeholder={props.placeholder}
-            type={props.type || "text"}
-            onChange={onChangeValue}
-            onKeyDown={onKeyDown}
-            name={props.name}
-            ref={inputRef}
-            value={value}
-          />
+          {input}
         </>
       ) : (
         <div className="meta" onClick={onClickEdit}>
           <div className="label">{props.name}</div>
           <div className={clsx("value", { password: isPassword })}>
-            {value
-              ? isPassword
-                ? <span>{new Array(value.length).join("⬤")}</span>
-                : value
-              : props.placeholder}
+            {value ? (
+              isPassword ? (
+                <span>{new Array(value.length).join("⬤")}</span>
+              ) : (
+                value
+              )
+            ) : (
+              props.placeholder
+            )}
           </div>
         </div>
       )}

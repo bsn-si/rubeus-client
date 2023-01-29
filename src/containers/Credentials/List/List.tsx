@@ -11,23 +11,10 @@ import "./List.css"
 
 export function List() {
   const collection = useSelector(selectors.credentials)
-  const error = useSelector(selectors.credentialsError)
   const dispatch = useDispatch<AppDispatch>()
 
   const onReload = useCallback(() => {
     dispatch(actions.getCredentials())
-  }, [])
-
-  const onAddCredential = useCallback(() => {
-    dispatch(actions.setEditable())
-    dispatch(actions.setModalOpened(true))
-  }, [])
-
-  const onOpenSettings = useCallback(() => {
-    dispatch(actions.setEditable())
-    
-    dispatch(actions.setSettingsOpened(true))
-    dispatch(actions.setModalOpened(true))
   }, [])
 
   const items = collection.map((credential, idx) => (
@@ -35,36 +22,18 @@ export function List() {
   ))
 
   return (
-    <div className="credentials">
-      <div className="title">
-        <span>Your Credentials</span>
+    <div className={clsx("credentials list", { empty: !items.length })}>
+      {!items.length ? (
+        <>
+          <div className="title">Please reload list or add new credential</div>
 
-        <div className="actions">
-            <div className="button create" onClick={onOpenSettings}>
-              Settings
-            </div>
-
-          <div className="button create" onClick={onAddCredential}>
-            Add Credential
+          <div className="button reload" onClick={onReload}>
+            Reload List
           </div>
-        </div>
-      </div>
-
-      <div className={clsx("list", { empty: !items.length })}>
-        {!items.length ? (
-          <>
-            <div className="title">Please reload list or add new credential</div>
-
-            <div className="button reload" onClick={onReload}>
-              Reload List
-            </div>
-          </>
-        ) : (
-          items
-        )}
-      </div>
-
-      {error && <div className="error message">{error}</div>}
+        </>
+      ) : (
+        items
+      )}
     </div>
   )
 }

@@ -2,14 +2,14 @@ import { useCallback, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { clsx } from "clsx"
 
-import { AppDispatch, RootState } from "../../../store"
-import { Input, Spinner } from "../../../components"
-import * as selectors from "../../../selectors"
-import * as actions from "../../../features"
+import { AppDispatch, RootState } from "../../../../store"
+import { Input, Spinner } from "../../../../components"
+import * as selectors from "../../../../selectors"
+import * as actions from "../../../../features"
 import "./Update.css"
 
 export function Update() {
-  const credential = useSelector(selectors.editable)
+  const credential = useSelector(selectors.credentialEditable)
   const { payload, group: _group } = credential
   const dispatch = useDispatch<AppDispatch>()
 
@@ -46,13 +46,13 @@ export function Update() {
         }),
       ).unwrap()
 
-      dispatch(actions.setModalOpened())
-      dispatch(actions.setEditable())
+      dispatch(actions.setCredentialsModalOpened())
+      dispatch(actions.setCredentialEditable())
     }
   }, [isChanged, login, password, host, group, credential.id])
 
   return (
-    <div className={clsx("update-form", { loading })}>
+    <div className={clsx("credential update-form", { loading })}>
       {loading && (
         <div className="overlay">
           <Spinner />

@@ -12,7 +12,6 @@ export interface CredentialsState {
   collection: Record<string, Credential>
   loading: Record<string, boolean>
   groups: Record<string, string[]>
-  settingsOpened?: boolean 
   selectedGroup?: string
   modalOpened?: boolean
   editable?: Credential
@@ -20,10 +19,10 @@ export interface CredentialsState {
   ids: string[]
 }
 
-interface SetCollectionPayload
+interface setCredentialsCollectionPayload
   extends Pick<CredentialsState, "groups" | "collection" | "ids"> {}
 
-interface SetLoadingPayload {
+interface setCredentialsLoadingPayload {
   loading?: boolean
   item: string
 }
@@ -53,7 +52,7 @@ export const getCredentials = createAsyncThunk(
     const contract = selectors.contract(state)
 
     dispatch(
-      setLoading({
+      setCredentialsLoading({
         item: "list",
         loading: true,
       }),
@@ -62,7 +61,7 @@ export const getCredentials = createAsyncThunk(
     try {
       const credentials = await api.getCredentials(privateKey, contract)
 
-      const action = credentials.reduce<SetCollectionPayload>(
+      const action = credentials.reduce<setCredentialsCollectionPayload>(
         (rec, credential) => {
           const { id, group } = credential
 
@@ -83,7 +82,7 @@ export const getCredentials = createAsyncThunk(
         },
       )
 
-      dispatch(setCollection(action))
+      dispatch(setCredentialsCollection(action))
     } catch (error) {      
       if (connected) {
         dispatch(setCredentialsError("Failed load credentials"))
@@ -92,7 +91,7 @@ export const getCredentials = createAsyncThunk(
       throw error
     } finally {
       dispatch(
-        setLoading({
+        setCredentialsLoading({
           item: "list",
           loading: false,
         }),
@@ -109,7 +108,7 @@ export const updateCredential = createAsyncThunk(
     const contract = selectors.contract(state)
 
     dispatch(
-      setLoading({
+      setCredentialsLoading({
         item: credential.id,
         loading: true,
       }),
@@ -128,7 +127,7 @@ export const updateCredential = createAsyncThunk(
       dispatch(setCredential(credential))
 
       dispatch(
-        setLoading({
+        setCredentialsLoading({
           item: credential.id,
           loading: false,
         }),
@@ -148,7 +147,7 @@ export const addCredential = createAsyncThunk(
     const contract = selectors.contract(state)
 
     dispatch(
-      setLoading({
+      setCredentialsLoading({
         item: "add",
         loading: true,
       }),
@@ -161,7 +160,7 @@ export const addCredential = createAsyncThunk(
       dispatch(setCredential(credential))
 
       dispatch(
-        setLoading({
+        setCredentialsLoading({
           item: "add",
           loading: false,
         }),
@@ -181,7 +180,7 @@ export const deleteCredential = createAsyncThunk(
     const contract = selectors.contract(state)
 
     dispatch(
-      setLoading({
+      setCredentialsLoading({
         item: credential.id,
         loading: true,
       }),
@@ -192,7 +191,7 @@ export const deleteCredential = createAsyncThunk(
       dispatch(unsetCredential(credential))
 
       dispatch(
-        setLoading({
+        setCredentialsLoading({
           item: credential.id,
           loading: false,
         }),
@@ -208,22 +207,19 @@ export const credentialsSlice = createSlice({
   name: "credentials",
   initialState,
   reducers: {
-    setLoading(state, { payload }: PayloadAction<SetLoadingPayload>) {
+    setCredentialsLoading(state, { payload }: PayloadAction<setCredentialsLoadingPayload>) {
       state.loading[payload.item] = !!payload.loading
     },
-    setModalOpened(state, { payload }: PayloadAction<boolean | undefined | void>) {
+    setCredentialsModalOpened(state, { payload }: PayloadAction<boolean | undefined | void>) {
       state.modalOpened = !!payload
     },
-    setSettingsOpened(state, { payload }: PayloadAction<boolean | undefined | void>) {
-      state.settingsOpened = !!payload
-    },
-    setCollection(state, { payload }: PayloadAction<SetCollectionPayload>) {
+    setCredentialsCollection(state, { payload }: PayloadAction<setCredentialsCollectionPayload>) {
       assign(state, payload)
     },
-    setEditable(state, { payload }: PayloadAction<Credential | undefined | void>) {
+    setCredentialEditable(state, { payload }: PayloadAction<Credential | undefined | void>) {
       state.editable = payload ? payload : undefined
     },
-    setSelectedGroup(state, { payload }: PayloadAction<string | void | undefined>) {
+    setSelectedNotesGroup(state, { payload }: PayloadAction<string | void | undefined>) {
       state.selectedGroup = payload ? payload : undefined
     },
     setCredential(state, { payload }: PayloadAction<Credential>) {
@@ -255,7 +251,6 @@ export const credentialsSlice = createSlice({
     },
     setInitialCredentials(state) {
       assign(state, {
-        settingsOpened: false,
         modalOpened: false,
         collection: {},
         loading: {},
@@ -276,15 +271,14 @@ export const credentialsSlice = createSlice({
 })
 
 export const {
+  setCredentialsModalOpened,
+  setCredentialsCollection,
+  setCredentialEditable,
   setInitialCredentials,
-  setSettingsOpened,
-  setSelectedGroup,
+  setSelectedNotesGroup,
+  setCredentialsLoading,
   unsetCredential,
-  setModalOpened,
-  setCollection,
   setCredential,
-  setEditable,
-  setLoading,
 } = credentialsSlice.actions as any
 
 export const credentialsReducer = credentialsSlice.reducer

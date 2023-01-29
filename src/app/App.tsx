@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { clsx } from "clsx"
 
-import { Credentials, Settings, Unlock } from "../containers"
+import { Layout, Settings, Unlock } from "../containers"
 import * as selectors from "../selectors"
 import { EXTENSION } from "../utils"
 import "./App.css"
@@ -16,7 +16,7 @@ export function App() {
   return (
     <div className={clsx("app", { extension: EXTENSION })}>
       <div className="container">
-        {connected ? <Credentials /> : isUnlock}
+        {connected ? <Layout /> : isUnlock}
       </div>
     </div>
   )

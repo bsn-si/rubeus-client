@@ -21,8 +21,8 @@ export function Item({ credential }: Props) {
   )
 
   const onUpdate = useCallback(() => {
-    dispatch(actions.setEditable(credential))
-    dispatch(actions.setModalOpened(true))
+    dispatch(actions.setCredentialEditable(credential))
+    dispatch(actions.setCredentialsModalOpened(true))
   }, [credential])
 
   const onDelete = useCallback(() => {
@@ -30,7 +30,7 @@ export function Item({ credential }: Props) {
   }, [credential])
 
   return (
-    <div className={clsx("item", { loading })}>
+    <div className={clsx("item credential", { loading })}>
       <div className="details">
         <div className="field">
           <strong>Group:</strong>

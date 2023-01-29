@@ -5,11 +5,17 @@ import BN from "bn.js"
 
 import { getCredentials, setInitialCredentials } from "./credentials"
 import { CONTRACT, keyring, RPC_URL } from "../utils"
+import { getNotes, setInitialNotes } from "./notes"
 import * as selectors from "../selectors"
 import { RootState } from "../store"
 import { api } from "../api"
 
 const { assign } = Object
+
+export enum Tab {
+  Credentials = "credentials",
+  Notes = "notes",
+}
 
 export interface SettingsState {
   encryptedPrivateKey?: string
@@ -19,6 +25,9 @@ export interface SettingsState {
   rpcUrl?: string
 
   connected: boolean
+  tab: Tab
+
+  settingsOpened?: boolean 
   loading: boolean
   error?: string
   balance?: BN
@@ -28,6 +37,7 @@ const initialState: SettingsState = {
   contract: CONTRACT,
   rpcUrl: RPC_URL,
 
+  tab: Tab.Credentials,
   connected: false,
   loading: false,
 }
@@ -82,15 +92,15 @@ export const watchBalance = (store: Store<RootState>) => {
     }
   }
 
-  setTimeout(requestBalance, 2000)
+  setInterval(requestBalance, 2000)
 }
 
 export const setSetingsError = createAsyncThunk(
   "settings/setError",
   async (error: string | undefined | void, { dispatch }) => {
-    if (error) {
-      setTimeout(() => dispatch(setSetingsError()), 2000)
-    }
+    // if (error) {
+    //   setTimeout(() => dispatch(setSetingsError()), 2000)
+    // }
 
     return error
   },
@@ -109,6 +119,7 @@ export const reset = createAsyncThunk("settings/reset", async (_: void, { dispat
 
   dispatch(setInitialCredentials())
   dispatch(setInitialSettings())
+  dispatch(setInitialNotes())
 })
 
 export const connect = createAsyncThunk(
@@ -119,7 +130,22 @@ export const connect = createAsyncThunk(
     const { rpcUrl, contract, encryptedPrivateKey } = state.settings
     let { privateKey } = state.settings
 
-    dispatch(setInitialCredentials())
+    await Promise.all([
+      dispatch(setInitialCredentials()),
+      dispatch(setInitialNotes()),
+      dispatch(setSetingsError())
+    ])
+
+    if (privateKey && encryptedPrivateKey) {
+      localStorage.setItem(
+        "data",
+        JSON.stringify({
+          encryptedPrivateKey,
+          contract,
+          rpcUrl,
+        }),
+      )
+    }
 
     if (options.password && privateKey && !encryptedPrivateKey) {
       const encryptedPrivateKey = AES.encrypt(privateKey, options.password).toString()
@@ -152,7 +178,10 @@ export const connect = createAsyncThunk(
         await api.connect(rpcUrl)
 
         try {
-          await dispatch(getCredentials()).unwrap()
+          await Promise.all([
+            await dispatch(getCredentials()).unwrap(),
+            await dispatch(getNotes()).unwrap()
+          ])
           dispatch(setConnected(true))
         } catch (error) {
           await api.disconnect()
@@ -183,16 +212,24 @@ export const settingsSlice = createSlice({
     setBalance(state, action: PayloadAction<BN | void | undefined>) {
       state.balance = action.payload || undefined
     },
+    setTab(state, action: PayloadAction<Tab>) {
+      state.tab = action.payload
+    },
     setPrivateKey(state, action: PayloadAction<string | void | undefined>) {
       extendTmp({ privateKey: action.payload || undefined })
       state.privateKey = action.payload || undefined
+    },
+    setSettingsOpened(state, { payload }: PayloadAction<boolean | undefined | void>) {
+      state.settingsOpened = !!payload
     },
     setConnected(state, action: PayloadAction<boolean | void | undefined>) {
       state.connected = !!action.payload
     },
     setInitialSettings(state) {
       assign(state, {
+        encryptedPrivateKey: undefined,
         skipWelcomeScreen: false,
+        settingsOpened: false,
         privateKey: undefined,
         contract: CONTRACT,
         rpcUrl: RPC_URL,
@@ -215,11 +252,13 @@ export const settingsSlice = createSlice({
 
 export const {
   setInitialSettings,
+  setSettingsOpened,
   setPrivateKey,
   setConnected,
   setContract,
   setBalance,
   setRpcUrl,
+  setTab,
 } = settingsSlice.actions as any
 
 export const settingsReducer = settingsSlice.reducer

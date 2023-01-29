@@ -21,6 +21,7 @@ export function Settings({ action = "connect" }: Props) {
   const [password, setPassword] = useState("")
   const [save, setSave] = useState(false)
 
+  const encryptedPrivateKey = useSelector(selectors.encryptedPrivateKey)
   const privateKey = useSelector(selectors.privateKey)
   const error = useSelector(selectors.settingsError)
   const contract = useSelector(selectors.contract)
@@ -120,15 +121,17 @@ export function Settings({ action = "connect" }: Props) {
           icon={<Icons.Link />}
         />
 
-        <Input
-          placeholder="Private key (in hex)"
-          onValidate={onValidatePrivateKey}
-          onChange={onChangePrivateKey}
-          className="private-key"
-          name="Private Key"
-          value={privateKey}
-          icon={<Icons.Key />}
-        />
+        {action === "connect" && !encryptedPrivateKey && (
+          <Input
+            placeholder="Private key (in hex)"
+            onValidate={onValidatePrivateKey}
+            onChange={onChangePrivateKey}
+            className="private-key"
+            name="Private Key"
+            value={privateKey}
+            icon={<Icons.Key />}
+          />
+        )}
 
         <Input
           placeholder="RPC url to Node"
@@ -141,7 +144,7 @@ export function Settings({ action = "connect" }: Props) {
         />
       </div>
 
-      {action === "connect" && (
+      {action === "connect" && !encryptedPrivateKey && (
         <div className="toggle-save">
           <Checkbox
             placeholder="Save this options"
@@ -173,10 +176,7 @@ export function Settings({ action = "connect" }: Props) {
           </div>
         )}
 
-        <div
-          className={clsx("button connect", { disabled: !isCanConnect })}
-          onClick={onConnect}
-        >
+        <div className={clsx("button connect", { disabled: !isCanConnect })} onClick={onConnect}>
           {action === "connect" ? "Connect" : "Save"}
         </div>
 

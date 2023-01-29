@@ -74,7 +74,7 @@
 }
 
 /* Input */
-.input input {
+.input input, .input textarea {
   background-color: transparent;
   transition: all 0.4s ease;
   font-weight: 500;
@@ -84,8 +84,11 @@
   min-width: auto;
   outline: none;
   border: none;
-  height: 46px;
   flex: 1;
+}
+
+.input input {
+  height: 46px;
 }
 
 .input input::placeholder {
@@ -105,4 +108,26 @@
 
 .input.invalid .icon {
   fill: #F44336;
+}
+
+/* Textarea */
+.input.area {
+  height: auto;
+}
+
+.input.area .meta {
+  justify-content: center;
+  min-height: 46px;
+  
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+
+.input.area textarea {
+  padding: 8px 10px;
+  min-height: 120px;
+}
+
+.input.area .meta .value {
+  overflow-wrap: anywhere;
 }
