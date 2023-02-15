@@ -4,11 +4,16 @@ import { Provider } from "react-redux"
 import Modal from "react-modal"
 import React from "react"
 
+import { EXTENSION } from "./config"
 import { store } from "./store"
 import "reseter.css"
 import "./index.css"
 
 import { App } from "./app"
+
+if (!EXTENSION) {
+  require("./background-script/index")
+}
 
 const container = document.getElementById("root") as HTMLElement
 Modal.setAppElement(container)

@@ -4,7 +4,7 @@ import * as selectors from "../selectors"
 import { RootState } from "../store"
 import { Note } from "../models"
 import { delay } from "../utils"
-import { api } from "../api"
+import * as api from "../api"
 
 const { assign } = Object
 
@@ -18,8 +18,7 @@ export interface NotesState {
   ids: string[]
 }
 
-interface setCredentialsCollectionPayload
-  extends Pick<NotesState, "collection" | "ids"> {}
+interface setCredentialsCollectionPayload extends Pick<NotesState, "collection" | "ids"> {}
 
 interface SetLoadingPayload {
   loading?: boolean
@@ -57,7 +56,7 @@ export const getNotes = createAsyncThunk(
     )
 
     try {
-      const notes = await api.getNotes(privateKey, contract)
+      const notes = await api.getNotes()
 
       const action = notes.reduce<setCredentialsCollectionPayload>(
         (rec, note) => {
@@ -74,11 +73,11 @@ export const getNotes = createAsyncThunk(
       )
 
       dispatch(setNotesCollection(action))
-    } catch (error) {      
+    } catch (error) {
       if (connected) {
         dispatch(setNotesError("Failed load notes"))
       }
-      
+
       throw error
     } finally {
       dispatch(
@@ -91,53 +90,37 @@ export const getNotes = createAsyncThunk(
   },
 )
 
-export const updateNote = createAsyncThunk(
-  "notes/updateNote",
-  async (note: Note, { dispatch, getState }) => {
-    const state = getState() as RootState
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
+export const updateNote = createAsyncThunk("notes/updateNote", async (note: Note, { dispatch }) => {
+  dispatch(
+    setNotesLoading({
+      item: note.id,
+      loading: true,
+    }),
+  )
+
+  try {
+    await api.updateNote({ id: note.id, payload: note.payload })
+
+    await delay(300)
+
+    dispatch(setActiveNote(note))
+    dispatch(setNote(note))
 
     dispatch(
       setNotesLoading({
         item: note.id,
-        loading: true,
+        loading: false,
       }),
     )
-
-    try {
-      await api.updateNote(
-        privateKey,
-        contract,
-        note.id,
-        note.payload,
-      )
-
-      await delay(300)
-      
-      dispatch(setActiveNote(note))
-      dispatch(setNote(note))
-
-      dispatch(
-        setNotesLoading({
-          item: note.id,
-          loading: false,
-        }),
-      )
-    } catch (error) {
-      console.error(error)
-      dispatch(setNotesError("Failed update note"))
-    }
-  },
-)
+  } catch (error) {
+    console.error(error)
+    dispatch(setNotesError("Failed update note"))
+  }
+})
 
 export const addNote = createAsyncThunk(
   "notes/addNote",
-  async (params: Pick<Note, "payload">, { dispatch, getState }) => {
-    const state = getState() as RootState
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
-
+  async (params: Pick<Note, "payload">, { dispatch }) => {
     dispatch(
       setNotesLoading({
         item: "add",
@@ -146,7 +129,7 @@ export const addNote = createAsyncThunk(
     )
 
     try {
-      const note = await api.addNote(privateKey, contract, params.payload)
+      const note = await api.addNote({ payload: params.payload })
       await delay(300)
 
       dispatch(setNote(note))
@@ -164,37 +147,30 @@ export const addNote = createAsyncThunk(
   },
 )
 
-export const deleteNote = createAsyncThunk(
-  "notes/deleteNote",
-  async (note: Note, { dispatch, getState }) => {
-    const state = getState() as RootState
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
+export const deleteNote = createAsyncThunk("notes/deleteNote", async (note: Note, { dispatch }) => {
+  dispatch(
+    setNotesLoading({
+      item: note.id,
+      loading: true,
+    }),
+  )
+
+  try {
+    await api.deleteNote({ id: note.id })
+    dispatch(setActiveNote())
+    dispatch(unsetNote(note))
 
     dispatch(
       setNotesLoading({
         item: note.id,
-        loading: true,
+        loading: false,
       }),
     )
-
-    try {
-      await api.deleteNote(privateKey, contract, note.id)
-      dispatch(setActiveNote())
-      dispatch(unsetNote(note))
-
-      dispatch(
-        setNotesLoading({
-          item: note.id,
-          loading: false,
-        }),
-      )
-    } catch (error) {
-      console.error(error)
-      dispatch(setNotesError("Failed delete note"))
-    }
-  },
-)
+  } catch (error) {
+    console.error(error)
+    dispatch(setNotesError("Failed delete note"))
+  }
+})
 
 export const notesSlice = createSlice({
   name: "notes",

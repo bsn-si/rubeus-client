@@ -113,11 +113,11 @@ export function Layout() {
       <div className={clsx("row", { loading })}>
         <div className="sidebar">
           <div className="title">{sidebarTitle}</div>
-          
+
           <div className="content">
             <Sidebar />
           </div>
-          
+
           <Balance />
         </div>
 

@@ -62,19 +62,9 @@ export function Update() {
       <div className="fields">
         <Input name="host" placeholder="Host" value={host} onChange={setHost} />
 
-        <Input
-          placeholder="Login or email"
-          onChange={setLogin}
-          value={login}
-          name="login"
-        />
+        <Input placeholder="Login or email" onChange={setLogin} value={login} name="login" />
 
-        <Input
-          placeholder="Password"
-          onChange={setPassword}
-          value={password}
-          name="password"
-        />
+        <Input placeholder="Password" onChange={setPassword} value={password} name="password" />
 
         <Input name="group" placeholder="Group" value={group} onChange={setGroup} />
       </div>

@@ -20,7 +20,11 @@ module.exports = () => {
   return ({
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? false : "source-map",
-    entry: "./src/index.tsx",
+    entry: {
+      dapp: "./src/dapp.tsx",
+      content: "./src/content-script/index.ts",
+      background: "./src/background-script/index.ts"
+    },
   
     module: {
       rules: [
@@ -121,6 +125,7 @@ module.exports = () => {
       new HtmlWebpackPlugin({
         title: "Rubeus Client",
         template: "./src/index.html",
+        excludeChunks: ["content", "background"]
       }),
       
       new ForkTsCheckerWebpackPlugin(),

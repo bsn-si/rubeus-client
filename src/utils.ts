@@ -9,19 +9,9 @@ import Keyring from "@polkadot/keyring"
 import * as pako from "pako"
 import BN from "bn.js"
 
-// Target contract address - if doesn't need configure in ui
-export const CONTRACT = process.env.CONTRACT
-// Target api node address - if doesn't need configure in ui, set dev node by default
-export const RPC_URL = process.env.RPC_URL
-// Base env
-export const NODE_ENV = process.env.NODE_ENV
-// Extension flag
-export const EXTENSION = process.env.EXTENSION === "true"
-
 export const keyring = new Keyring({ type: "sr25519" })
 
-export const delay = (ms: number) =>
-  new Promise((resolve: any) => setTimeout(() => resolve(), ms))
+export const delay = (ms: number) => new Promise((resolve: any) => setTimeout(() => resolve(), ms))
 
 export function encryptToHex(address: GenericAccountId, key: string, data: string) {
   const message = new TextEncoder().encode(data)
@@ -51,11 +41,7 @@ export function decryptFromHex(address: GenericAccountId, key: string, payload: 
   return new TextDecoder().decode(decrypted)
 }
 
-export function decryptPayloadFromHex(
-  address: GenericAccountId,
-  key: string,
-  payload: string,
-) {
+export function decryptPayloadFromHex(address: GenericAccountId, key: string, payload: string) {
   const decrypted = decryptFromHex(address, key, payload)
   const parsed = JSON.parse(decrypted)
 
@@ -71,9 +57,7 @@ export const waitExtrinsic = (
   waitStatus?: string[],
 ): Promise<ISubmittableResult> =>
   new Promise(async (resolve, reject) => {
-    const args: any = Array.isArray(signer)
-      ? [signer[0], { signer: signer[1] }]
-      : [signer, {}]
+    const args: any = Array.isArray(signer) ? [signer[0], { signer: signer[1] }] : [signer, {}]
 
     const unsubscribe = await extrinsic.signAndSend(args[0], args[1], res => {
       const defaultStatusMatch = res.status.isInBlock || res.status.isFinalized
@@ -118,9 +102,7 @@ export const execContractCallWithResult = async (
     const data = query.output.toJSON()
 
     if (data.ok) {
-      const gasLimit = getBalance(100, BalanceGrade.Milli)
-        .add(new BN(query.gasConsumed))
-        .toNumber()
+      const gasLimit = getBalance(100, BalanceGrade.Milli).add(new BN(query.gasConsumed)).toNumber()
 
       const extrinsic = contract.tx[method]({ gasLimit }, ...args)
 
@@ -140,9 +122,7 @@ export function generateUUID() {
   // Public Domain/MIT
   let d = new Date().getTime() //Timestamp
 
-  let d2 =
-    (typeof performance !== "undefined" && performance.now && performance.now() * 1000) ||
-    0 //Time in microseconds since page-load or 0 if unsupported
+  let d2 = (typeof performance !== "undefined" && performance.now && performance.now() * 1000) || 0 //Time in microseconds since page-load or 0 if unsupported
 
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
     let r = Math.random() * 16 //random number between 0 and 16
@@ -159,7 +139,11 @@ export function generateUUID() {
   })
 }
 
-export default function objectSwitch<T>(value: string, target: { [key: string]: T }, exec = false): T {
+export default function objectSwitch<T>(
+  value: string,
+  target: { [key: string]: T },
+  exec = false,
+): T {
   return target[value]
     ? exec
       ? (target as any)[value]()

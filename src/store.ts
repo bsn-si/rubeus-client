@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import logger from "redux-logger"
+import { EXTENSION } from "./config"
 
 import {
   credentialsReducer,

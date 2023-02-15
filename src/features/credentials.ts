@@ -4,7 +4,7 @@ import * as selectors from "../selectors"
 import { Credential } from "../models"
 import { RootState } from "../store"
 import { delay } from "../utils"
-import { api } from "../api"
+import * as api from "../api"
 
 const { assign } = Object
 
@@ -46,10 +46,7 @@ export const getCredentials = createAsyncThunk(
   "credentials/getCredentials",
   async (data: void, { dispatch, getState }) => {
     const state = getState() as RootState
-
     const connected = selectors.isConnected(state)
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
 
     dispatch(
       setCredentialsLoading({
@@ -59,7 +56,8 @@ export const getCredentials = createAsyncThunk(
     )
 
     try {
-      const credentials = await api.getCredentials(privateKey, contract)
+      const credentials = await api.getCredentials()
+      console.log(credentials)
 
       const action = credentials.reduce<setCredentialsCollectionPayload>(
         (rec, credential) => {
@@ -83,11 +81,11 @@ export const getCredentials = createAsyncThunk(
       )
 
       dispatch(setCredentialsCollection(action))
-    } catch (error) {      
+    } catch (error) {
       if (connected) {
         dispatch(setCredentialsError("Failed load credentials"))
       }
-      
+
       throw error
     } finally {
       dispatch(
@@ -102,11 +100,7 @@ export const getCredentials = createAsyncThunk(
 
 export const updateCredential = createAsyncThunk(
   "credentials/updateCredential",
-  async (credential: Credential, { dispatch, getState }) => {
-    const state = getState() as RootState
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
-
+  async (credential: Credential, { dispatch }) => {
     dispatch(
       setCredentialsLoading({
         item: credential.id,
@@ -115,13 +109,11 @@ export const updateCredential = createAsyncThunk(
     )
 
     try {
-      await api.updateCredential(
-        privateKey,
-        contract,
-        credential.id,
-        credential.group,
-        credential.payload,
-      )
+      await api.updateCredential({
+        payload: credential.payload,
+        group: credential.group,
+        id: credential.id,
+      })
 
       await delay(300)
       dispatch(setCredential(credential))
@@ -141,11 +133,7 @@ export const updateCredential = createAsyncThunk(
 
 export const addCredential = createAsyncThunk(
   "credentials/addCredential",
-  async (params: Pick<Credential, "group" | "payload">, { dispatch, getState }) => {
-    const state = getState() as RootState
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
-
+  async (params: Pick<Credential, "group" | "payload">, { dispatch }) => {
     dispatch(
       setCredentialsLoading({
         item: "add",
@@ -154,9 +142,12 @@ export const addCredential = createAsyncThunk(
     )
 
     try {
-      const credential = await api.addCredential(privateKey, contract, params.group, params.payload)
-      await delay(300)
+      const credential = await api.addCredential({
+        payload: params.payload,
+        group: params.group,
+      })
 
+      await delay(300)
       dispatch(setCredential(credential))
 
       dispatch(
@@ -174,11 +165,7 @@ export const addCredential = createAsyncThunk(
 
 export const deleteCredential = createAsyncThunk(
   "credentials/deleteCredential",
-  async (credential: Credential, { dispatch, getState }) => {
-    const state = getState() as RootState
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
-
+  async (credential: Credential, { dispatch }) => {
     dispatch(
       setCredentialsLoading({
         item: credential.id,
@@ -187,7 +174,7 @@ export const deleteCredential = createAsyncThunk(
     )
 
     try {
-      await api.deleteCredential(privateKey, contract, credential.id)
+      await api.deleteCredential({ id: credential.id })
       dispatch(unsetCredential(credential))
 
       dispatch(
@@ -241,7 +228,7 @@ export const credentialsSlice = createSlice({
       // prettier-ignore
       state.groups[payload.group] = state.groups[payload.group]
         .filter(id => id !== payload.id)
-      
+
       if (!state.groups[payload.group].length) {
         delete state.groups[payload.group]
       }

@@ -52,10 +52,7 @@ export function Unlock() {
       </div>
 
       <div className="actions">
-        <div
-          className={clsx("button connect", { disabled: !isCanConnect })}
-          onClick={onConnect}
-        >
+        <div className={clsx("button connect", { disabled: !isCanConnect })} onClick={onConnect}>
           Unlock
         </div>
 

@@ -35,9 +35,7 @@ export function Note() {
     <div className="note details empty">
       {!collection.length ? (
         <>
-          <div className="title">
-            Please reload list or add new note
-          </div>
+          <div className="title">Please reload list or add new note</div>
 
           <div className="button reload" onClick={onReload}>
             Reload

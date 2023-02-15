@@ -4,11 +4,12 @@ import { AES, enc } from "crypto-js"
 import BN from "bn.js"
 
 import { getCredentials, setInitialCredentials } from "./credentials"
-import { CONTRACT, keyring, RPC_URL } from "../utils"
 import { getNotes, setInitialNotes } from "./notes"
+import { CONTRACT, RPC_URL } from "../config"
 import * as selectors from "../selectors"
 import { RootState } from "../store"
-import { api } from "../api"
+import { keyring } from "../utils"
+import * as api from "../api"
 
 const { assign } = Object
 
@@ -27,7 +28,7 @@ export interface SettingsState {
   connected: boolean
   tab: Tab
 
-  settingsOpened?: boolean 
+  settingsOpened?: boolean
   loading: boolean
   error?: string
   balance?: BN
@@ -44,9 +45,7 @@ const initialState: SettingsState = {
 
 {
   try {
-    const { encryptedPrivateKey, contract, rpcUrl } = JSON.parse(
-      localStorage.data || "{}",
-    )
+    const { encryptedPrivateKey, contract, rpcUrl } = JSON.parse(localStorage.data || "{}")
 
     if (encryptedPrivateKey && contract && rpcUrl) {
       assign(initialState, {
@@ -82,11 +81,9 @@ export const watchBalance = (store: Store<RootState>) => {
     const isConnected = selectors.isConnected(state)
     const privateKey = selectors.privateKey(state)
 
-    if (isConnected && privateKey && api.client) {
-      const signer = keyring.addFromUri(privateKey)
-      const response = (await api.client.query.system.account(signer.address)) as any
-      const balance = response.data.free.toString()
-      store.dispatch(setBalance(balance))
+    if (isConnected && privateKey) {
+      const balance = await api.balance()
+      store.dispatch(setBalance(balance.toString()))
     } else {
       store.dispatch(setBalance())
     }
@@ -133,7 +130,7 @@ export const connect = createAsyncThunk(
     await Promise.all([
       dispatch(setInitialCredentials()),
       dispatch(setInitialNotes()),
-      dispatch(setSetingsError())
+      dispatch(setSetingsError()),
     ])
 
     if (privateKey && encryptedPrivateKey) {
@@ -175,13 +172,14 @@ export const connect = createAsyncThunk(
       localStorage.removeItem("temp")
 
       try {
-        await api.connect(rpcUrl)
+        await api.connect({ privateKey, contract, apiUrl: rpcUrl })
 
         try {
           await Promise.all([
             await dispatch(getCredentials()).unwrap(),
-            await dispatch(getNotes()).unwrap()
+            await dispatch(getNotes()).unwrap(),
           ])
+
           dispatch(setConnected(true))
         } catch (error) {
           await api.disconnect()
@@ -192,7 +190,7 @@ export const connect = createAsyncThunk(
         dispatch(setSetingsError("Connect to RPC failed"))
       }
     } else {
-      dispatch(setSetingsError("Pleae fill contract, private key and rpc"))
+      dispatch(setSetingsError("Please fill contract, private key and rpc"))
     }
   },
 )

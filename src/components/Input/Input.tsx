@@ -81,7 +81,7 @@ export function Input(props: Props) {
     icon: !!props.icon,
     area: !!props.textarea,
   }
-  
+
   const isPassword = props.type === "password"
 
   const input = createElement(props.textarea ? "textarea" : "input", {
