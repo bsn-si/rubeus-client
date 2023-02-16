@@ -189,7 +189,15 @@ export class Ui {
         assign(input.style, styles.formInput)
       } else {
         container.style.flexDirection = "row"
-        input.style.marginLeft = "10px"
+        
+        assign(input.style, {
+          margin: "auto",
+          marginLeft: "10px",
+          appearance: "auto",
+          opacity: "1",
+          position: "relative",
+          pointerEvents: "auto",
+        })
       }
 
       container.appendChild(label)

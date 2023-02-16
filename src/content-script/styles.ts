@@ -5,6 +5,12 @@ export const overlay = {
   top: "0px",
 }
 
+const clearPadding = {
+  lineHeight: "1",
+  padding: "0",
+  margin: "0",
+}
+
 export const container = {
   border: "1px solid rgba(0,0,0, 0.1)",
   borderRadius: "5px",
@@ -27,6 +33,8 @@ export const list = {
 }
 
 export const button = {
+  ...clearPadding,
+
   justifyContent: "center",
   alignItems: "center",
   display: "flex",
@@ -45,6 +53,8 @@ export const alert = {
 }
 
 export const form = {
+  ...clearPadding,
+  
   flexDirection: "column",
   position: "relative",
   padding: "8px 10px",
@@ -55,6 +65,8 @@ export const form = {
 }
 
 export const formTitle = {
+  ...clearPadding,
+
   marginBottom: "12px",
   fontSize: "14px",
 
@@ -65,6 +77,7 @@ export const formTitle = {
 }
 
 export const formResult = {
+  ...clearPadding,
   marginTop: "8px",
 
   borderRadius: "5px",
@@ -72,6 +85,8 @@ export const formResult = {
 }
 
 export const formError = {
+  ...clearPadding,
+
   color: "rgba(0,0,0, 0.6)",
   fontFamily: "Arial",
   textAlign: "center",
@@ -81,6 +96,8 @@ export const formError = {
 }
 
 export const formPassword = {
+  ...clearPadding,
+
   border: "1px dashed rgba(0,0,0, 0.1)",
   borderRadius: "4px",
   fontFamily: "Arial",
@@ -92,6 +109,8 @@ export const formPassword = {
 }
 
 export const formResultButton = {
+  ...clearPadding,
+
   border: "1px solid rgba(0,0,0, 0.1)",
   borderRadius: "4px",
 
@@ -110,6 +129,8 @@ export const formResultButton = {
 }
 
 export const formSubmitButton = {
+  ...clearPadding,
+
   justifyContent: "center",
   background: "#1E88E5",
   alignItems: "center",
@@ -142,11 +163,13 @@ export const formClose = {
 }
 
 export const formInputContainer = {
+  ...clearPadding,
   marginBottom: "10px",
   display: "flex",
 }
 
 export const formInput = {
+  ...clearPadding,
   border: "1px solid rgba(0,0,0, 0.2)",
   borderRadius: "4px",
   fontFamily: "Arial",
@@ -156,6 +179,7 @@ export const formInput = {
 }
 
 export const formLabel = {
+  ...clearPadding,
   marginBottom: "6px",
   fontSize: "12px",
 

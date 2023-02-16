@@ -247,11 +247,155 @@ class StackOverflow implements Methods {
   }
 }
 
+class Dribbble implements Methods {
+  password?: HTMLInputElement
+  login?: HTMLInputElement
+  form?: HTMLFormElement
+  submit?: HTMLElement
+  type?: FormType
+
+  selectors = {
+    submit: "[type=\"submit\"]",
+
+    authPassword: "input#password",
+    authLogin: "input#login",
+    authForm: "form[action=\"/session\"]",
+
+    registerForm: "form#new_user",
+    registerLogin: "input#user_email",
+    registerPassword: "input#user_password",
+  }
+
+  constructor() {
+    this.getForm = this.getForm.bind(this)
+    this.setup = this.setup.bind(this)
+
+    return this
+  }
+
+  // NOTE: by default required input[type="password"]
+  public setup(input: HTMLInputElement): Methods {
+    const { form } = input
+    this.form = form
+
+    if (form) {
+      const registerForm = document.querySelector(this.selectors.registerForm)
+      const authForm = document.querySelector(this.selectors.authForm)
+
+      if (registerForm === form) {
+        this.password = form.querySelector(this.selectors.registerPassword)
+        this.login = form.querySelector(this.selectors.registerLogin)
+        this.submit = form.querySelector(this.selectors.submit)
+        this.type = FormType.Register
+        return this
+      }
+
+      if (authForm === form) {
+        this.password = form.querySelector(this.selectors.authPassword)
+        this.login = form.querySelector(this.selectors.authLogin)
+        this.submit = form.querySelector(this.selectors.submit)
+        this.type = FormType.Login
+        return this
+      }
+
+      this.type = FormType.Unknown
+      this.password = input
+    } else {
+      this.type = FormType.Unknown
+      this.password = input
+    }
+
+    return this
+  }
+
+  public getForm(): FormElements {
+    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+  }
+
+  static getData = (input: HTMLInputElement): FormElements => {
+    const data = new Dribbble().setup(input).getForm()
+    return data
+  }
+}
+
+class Zara implements Methods {
+  password?: HTMLInputElement
+  login?: HTMLInputElement
+  form?: HTMLFormElement
+  submit?: HTMLElement
+  type?: FormType
+
+  selectors = {
+    submit: "button.zds-button",
+
+    authForm: "form.logon-form",
+    authPassword: "input[name=\"password\"]",
+    authLogin: "input[name=\"logonId\"]",
+
+    registerForm: "form.address-form",
+    registerPassword: "input[name=\"password\"]",
+    registerLogin: "input[name=\"email\"]",
+  }
+
+  constructor() {
+    this.getForm = this.getForm.bind(this)
+    this.setup = this.setup.bind(this)
+
+    return this
+  }
+
+  // NOTE: by default required input[type="password"]
+  public setup(input: HTMLInputElement): Methods {
+    const { form } = input
+    this.form = form
+
+    if (form) {
+      const registerForm = document.querySelector(this.selectors.registerForm)
+      const authForm = document.querySelector(this.selectors.authForm)
+
+      if (registerForm === form) {
+        this.password = form.querySelector(this.selectors.registerPassword)
+        this.login = form.querySelector(this.selectors.registerLogin)
+        this.submit = form.querySelector(this.selectors.submit)
+        this.type = FormType.Register
+        return this
+      }
+
+      if (authForm === form) {
+        this.password = form.querySelector(this.selectors.authPassword)
+        this.login = form.querySelector(this.selectors.authLogin)
+        this.submit = form.querySelector(this.selectors.submit)
+        this.type = FormType.Login
+        return this
+      }
+
+      this.type = FormType.Unknown
+      this.password = input
+    } else {
+      this.type = FormType.Unknown
+      this.password = input
+    }
+
+    return this
+  }
+
+  public getForm(): FormElements {
+    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+  }
+
+  static getData = (input: HTMLInputElement): FormElements => {
+    const data = new Zara().setup(input).getForm()
+    return data
+  }
+}
+
 const SITEMAPS: Record<string, any> = {
   "stackoverflow.com": StackOverflow,
   "pinterest.com": Pinterest,
   "linkedin.com": LinkedIn,
+  "dribbble.com": Dribbble,
   "infura.io": Infura,
+  "zara.com": Zara,
 }
 
 export function getFormViaSitemap(url: string, input: HTMLInputElement): FormElements | undefined {
