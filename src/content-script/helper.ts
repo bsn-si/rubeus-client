@@ -98,5 +98,9 @@ export class PasswordHelper {
 
     document.addEventListener("focusin", this.onFocusIn)
     window.addEventListener("click", this.ui.clear)
+
+    setTimeout(async () => {
+      await api.isUnlocked()
+    }, 15000)
   }
 }

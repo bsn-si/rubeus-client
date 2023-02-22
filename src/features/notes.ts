@@ -43,10 +43,7 @@ export const getNotes = createAsyncThunk(
   "notes/getNotes",
   async (data: void, { dispatch, getState }) => {
     const state = getState() as RootState
-
     const connected = selectors.isConnected(state)
-    const privateKey = selectors.privateKey(state)
-    const contract = selectors.contract(state)
 
     dispatch(
       setNotesLoading({

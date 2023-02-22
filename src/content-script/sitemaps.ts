@@ -64,7 +64,7 @@ class Pinterest implements Methods {
   }
 
   public getForm(): FormElements {
-    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+    return pick(this, ["login", "password", "form", "submit", "type"]) as any
   }
 
   static getData = (input: HTMLInputElement): FormElements => {
@@ -117,7 +117,7 @@ class Infura implements Methods {
   }
 
   public getForm(): FormElements {
-    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+    return pick(this, ["login", "password", "form", "submit", "type"]) as any
   }
 
   static getData = (input: HTMLInputElement): FormElements => {
@@ -188,7 +188,7 @@ class LinkedIn implements Methods {
   }
 
   public getForm(): FormElements {
-    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+    return pick(this, ["login", "password", "form", "submit", "type"]) as any
   }
 
   static getData = (input: HTMLInputElement): FormElements => {
@@ -238,7 +238,7 @@ class StackOverflow implements Methods {
   }
 
   public getForm(): FormElements {
-    return pick(this, ["login", "password", "form", "type"]) as any
+    return pick(this, ["login", "password", "form", "submit", "type"]) as any
   }
 
   static getData = (input: HTMLInputElement): FormElements => {
@@ -309,7 +309,7 @@ class Dribbble implements Methods {
   }
 
   public getForm(): FormElements {
-    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+    return pick(this, ["login", "password", "form", "submit", "type"]) as any
   }
 
   static getData = (input: HTMLInputElement): FormElements => {
@@ -380,7 +380,7 @@ class Zara implements Methods {
   }
 
   public getForm(): FormElements {
-    return pick(this, ["login", "password", "form", "type", "submit"]) as any
+    return pick(this, ["login", "password", "form", "submit", "type"]) as any
   }
 
   static getData = (input: HTMLInputElement): FormElements => {
