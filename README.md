@@ -59,6 +59,8 @@ CONTRACT=<contract address hex or ss58>
 
 [![compile_and_install](https://user-images.githubusercontent.com/98888366/199809917-8328c724-eed4-4ea2-9354-aac357fe945e.png)](https://media.bsn.si/rubeus/compile_and_install_extension.mp4)
 
+## Related repos
+[Rubeus Keeper Ink! smartcontract](https://github.com/bsn-si/rubeus-smartcontract/)
 
 ## License
 [Apache License 2.0](https://github.com/bsn-si/rubeus-client/blob/main/license) © Bela Supernova ([bsn.si](https://bsn.si))
